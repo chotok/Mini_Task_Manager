@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Task {{ task.id }}{% endblock %}
+
+{% block body %}
+<h1>{{ task.title }}</h1>
+
+<table>
+    <tbody>
+        <tr>
+            <th>Description</th>
+            <td>{{ task.description }}</td>
+        </tr>
+        <tr>
+            <th>Status</th>
+            {% if task.status == 1%}
+                <td>Done</td>
+            {% else %}
+                <td>Undone</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <th>Created</th>
+            <td>{{ task.createdAt|date('Y-m-d H:i:s') }}</td>
+        </tr>
+        <tr>
+            <th>Updated</th>
+            <td>{{ task.updatedAt|date('Y-m-d H:i:s') }}</td>
+        </tr>
+        <tr>
+            <th>Owner</th>
+            <td>{{ task.owner.email }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<a href="{{ path('task_edit', { 'id':task.id }) }}">Edit</a>
+
+<a href="{{ path('task_delete', { 'id':task.id }) }}">Delete</a>
+
+{% endblock %}

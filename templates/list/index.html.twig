@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Task List{% endblock %}
+
+{% block body %}
+    <p>
+        You are logged in as {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Logout</a>
+    </p>
+    <h1>Tasks</h1>
+    <a href="{{ path('task_new') }}">New Task</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                
+                <th>Status</th>
+                <th>Created</th>
+                <th>Updated</th>
+                <th>Owner</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+                <tr>
+                    <td>
+                        <a href="{{ path('task_show', {'id':task.id}) }}">
+                            {{ task.title }} 
+                        </a>
+                    </td>
+                    
+                    {% if task.status == 1 %}
+                        <td>
+                            <form method="post" action="{{ path('task_switch',{'id':task.id}) }}">
+                                <input type="submit" value="Done" />
+                            </form>
+                        </td>
+                    {% else %}
+                        <td>
+                            <form method="post" action="{{ path('task_switch',{'id':task.id}) }}">
+                                <input type="submit" value="Undone" />
+                            </form>
+                        </td>
+                    {% endif %}
+
+                    <td> {{ task.createdAt|date('Y-m-d H:i:s') }} </td>
+                    <td> {{ task.updatedAt|date('Y-m-d H:i:s') }} </td>
+                    <td> {{ task.owner.userIdentifier }}</td>
+                    <td>
+                    <a href="{{ path('task_edit', { 'id':task.id }) }}">Edit </a>
+                    <a href="{{ path('task_delete', { 'id':task.id }) }}">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<h1>Delete {{title}}</h1>
+
+<p>Are you sure?</p>
+
+<form method="post">
+    <button>Yes</button>
+    <a href="{{ path('task_show', {'id': id}) }}">Cancel</a>
+</form>
+
+{% endblock %}
