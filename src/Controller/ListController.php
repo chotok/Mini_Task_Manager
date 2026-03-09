@@ -125,7 +125,7 @@ final class ListController extends AbstractController
     }
 
     #[Route('/task/switch/{id<\d+>}', name:'task_switch')]
-    public function switch ($id, EntityManagerInterface $manager, Request $request, TaskRepository $taskRepository): Response
+    public function switch ($id, EntityManagerInterface $manager, TaskRepository $taskRepository): Response
     {
         $task = $taskRepository -> findOneBy(['id'=>$id]);
         $task -> setStatus(! $task->isStatus());
@@ -133,4 +133,5 @@ final class ListController extends AbstractController
         
         return $this->redirectToRoute('app_list');
     }
+    
 }

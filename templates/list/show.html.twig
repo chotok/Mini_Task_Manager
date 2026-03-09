@@ -3,6 +3,7 @@
 {% block title %}Task {{ task.id }}{% endblock %}
 
 {% block body %}
+<a href="{{ path('app_list') }}">Back to List</a>
 <h1>{{ task.title }}</h1>
 
 <table>
