@@ -26,7 +26,7 @@ final class ListController extends AbstractController
         return $this->render('list/index.html.twig', [
             'controller_name' => 'ListController',
             'tasks' => $taskRepository->findBy(
-                ['owner' => $user]),
+                ['owner' => $user],['createdAt'=>'DESC']),
         ]);
     }
     
@@ -41,9 +41,13 @@ final class ListController extends AbstractController
     #[Route('task/new', name: 'task_new')]
     public function new(Request $request, EntityManagerInterface $manager): Response 
     {
+        $user = $this->getUser();
+
         $task = new Task();
+        $task -> setOwner($user);
 
         $form = $this->createForm(TaskFormType::class, $task);
+
 
         $form->handleRequest($request);
 
@@ -105,7 +109,7 @@ final class ListController extends AbstractController
     }
 
     #[Route('/task/{id<\d+>}/delete', name: 'task_delete')]
-    public function delete (Request $request, Task $task, EntityManagerInterface $manager): Response
+    public function delete(Request $request, Task $task, EntityManagerInterface $manager): Response
     {
         if($request->isMethod('POST')){
             $manager -> remove($task);
@@ -125,7 +129,7 @@ final class ListController extends AbstractController
     }
 
     #[Route('/task/switch/{id<\d+>}', name:'task_switch')]
-    public function switch ($id, EntityManagerInterface $manager, Request $request, TaskRepository $taskRepository): Response
+    public function switch($id, EntityManagerInterface $manager, Request $request, TaskRepository $taskRepository): Response
     {
         $task = $taskRepository -> findOneBy(['id'=>$id]);
         $task -> setStatus(! $task->isStatus());
@@ -133,4 +137,5 @@ final class ListController extends AbstractController
         
         return $this->redirectToRoute('app_list');
     }
+
 }
