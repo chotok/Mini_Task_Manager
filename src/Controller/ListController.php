@@ -19,14 +19,25 @@ use App\Repository\UserRepository;
 final class ListController extends AbstractController
 {
     #[Route('/list', name: 'app_list')]
-    public function index(TaskRepository $taskRepository): Response
+    public function index(TaskRepository $taskRepository, Request $request): Response
     {
+        
+        $searchTitle = '';
+        $statusFilter = 'all';
         $user = $this->getUser();
+        
+        if($request->isMethod('POST')){
+            $statusFilter = $request->getPayload()->get('status');
+            $searchTitle = $request->getPayload()->get('search');
+        }
+
+        
 
         return $this->render('list/index.html.twig', [
             'controller_name' => 'ListController',
-            'tasks' => $taskRepository->findBy(
-                ['owner' => $user],['createdAt'=>'DESC']),
+            
+            'tasks' => $taskRepository->search($searchTitle,$statusFilter,$user)
+                
         ]);
     }
     
@@ -47,7 +58,6 @@ final class ListController extends AbstractController
         $task -> setOwner($user);
 
         $form = $this->createForm(TaskFormType::class, $task);
-
 
         $form->handleRequest($request);
 
@@ -129,7 +139,7 @@ final class ListController extends AbstractController
     }
 
     #[Route('/task/switch/{id<\d+>}', name:'task_switch')]
-    public function switch($id, EntityManagerInterface $manager, Request $request, TaskRepository $taskRepository): Response
+    public function switch($id, EntityManagerInterface $manager, TaskRepository $taskRepository): Response
     {
         $task = $taskRepository -> findOneBy(['id'=>$id]);
         $task -> setStatus(! $task->isStatus());

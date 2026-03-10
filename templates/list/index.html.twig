@@ -7,12 +7,25 @@
         You are logged in as {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Logout</a>
     </p>
     <h1>Tasks</h1>
-    <a href="{{ path('task_new') }}">New Task</a>
+
+    
+    <br></br>
+
+    <form style="display:inline-block"  method="post">
+        <a href="{{ path('task_new') }}">New Task</a>
+        <input type="text" name='search' id='search'>
+        <select name="status" id="status">
+            <option value="all">All</option>
+            <option value="done">Done</option>
+            <option value="undone">Undone</option>
+        </select>
+        <input type="submit" value="Filter">
+    </form>
+
     <table>
         <thead>
             <tr>
                 <th>Title</th>
-                
                 <th>Status</th>
                 <th>Created</th>
                 <th>Updated</th>
