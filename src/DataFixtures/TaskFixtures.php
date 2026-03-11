@@ -17,7 +17,7 @@ class TaskFixtures extends Fixture implements DependentFixtureInterface
             $testTask = new Task();
             $testTask -> setTitle("Task {$i}");
             $testTask -> setDescription("Descriere {$i}");
-            $testTask -> setCreatedAt(new \DateTime());
+            $testTask -> setCreatedAt(new \DateTimeImmutable());
             $testTask -> setUpdatedAt(new \DateTime());
             $testTask -> setStatus((random_int(0,1)));
             $testTask -> setOwner($this->getReference(UserFixtures::TEST_USER_REFERENCE, User::class));

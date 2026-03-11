@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Task;
 use App\Entity\User;
 use App\Form\TaskFormType;
+use App\Repository\TaskRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -13,8 +15,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Repository\TaskRepository;
-use App\Repository\UserRepository;
+use Symfony\Component\Security\Core\Security;
+
 
 final class ListController extends AbstractController
 {
@@ -31,8 +33,6 @@ final class ListController extends AbstractController
             $searchTitle = $request->getPayload()->get('search');
         }
 
-        
-
         return $this->render('list/index.html.twig', [
             'controller_name' => 'ListController',
             
@@ -41,6 +41,7 @@ final class ListController extends AbstractController
         ]);
     }
     
+    //Function for showing a selected task on another page
     #[Route('/task/{id<\d+>}', name: 'task_show')]
     public function show(Task $task): Response 
     {
@@ -49,6 +50,7 @@ final class ListController extends AbstractController
         ]);
     }
 
+    //Function to create a new task and add it to the database
     #[Route('task/new', name: 'task_new')]
     public function new(Request $request, EntityManagerInterface $manager): Response 
     {
@@ -61,7 +63,7 @@ final class ListController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()){
+        if ($form->isSubmitted() && $form->isValid()){
 
             $manager->persist($task);
             $manager->flush();
@@ -77,6 +79,7 @@ final class ListController extends AbstractController
         ]);
     }
 
+    //Function to edit the owner of a task and modify it in the database
     #[Route('/task/{id<\d+>}/edit', name:'task_edit')]
     public function edit(Task $task, Request $request, EntityManagerInterface $manager): Response
     {
@@ -95,7 +98,7 @@ final class ListController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()){
+        if ($form->isSubmitted() && $form->isValid()){
 
             $manager->persist($task);
 
@@ -118,6 +121,7 @@ final class ListController extends AbstractController
         ]);
     }
 
+    //Function to delete an existing task from the database
     #[Route('/task/{id<\d+>}/delete', name: 'task_delete')]
     public function delete(Request $request, Task $task, EntityManagerInterface $manager): Response
     {
@@ -138,6 +142,7 @@ final class ListController extends AbstractController
         ]);
     }
 
+    //Function for switching the status of a task directly in the listing page
     #[Route('/task/switch/{id<\d+>}', name:'task_switch')]
     public function switch($id, EntityManagerInterface $manager, TaskRepository $taskRepository): Response
     {

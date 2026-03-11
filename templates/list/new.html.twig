@@ -14,6 +14,8 @@
     {{ form_row(form.createdAt) }}
     {{ form_row(form.updatedAt) }}
     {{ form_row(form.owner) }}
-    <button type="submit" class="btn">Add New Task</button>
+    {{ form_row(form.save) }}
+
+{{ form_end(form) }}
 
 {% endblock %}
